@@ -169,7 +169,7 @@
 	}
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
 	.listTrack--wrapper {
 		z-index: 999999;
 	}

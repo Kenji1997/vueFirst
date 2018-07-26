@@ -5,7 +5,7 @@ var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://127.0.0.1:27017/scDB";
 
 var server = require("http").createServer(app);
-server.listen(3000);
+server.listen(8081);
 // app.set("view engine", "ejs");
 // app.set("views", "./views");
 

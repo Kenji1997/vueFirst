@@ -4,7 +4,7 @@
 		<div class="play-view-infor-wrapper">
 			<div class="play-view__image-wrapper">
 				<div class="play-view__image">
-					<img :src="trackInfor.user.avatar_url" :alt="trackInfor.user.username" class="image" />
+					<img :src="trackInfor.user.avatar_url" :alt="trackInfor.user.username" :class="{'image': true, 'playing': this.rotateAvt}" />
 				</div>
 			</div>
 
@@ -44,6 +44,7 @@
 				
 				<!-- rain button -->
 				<div :class="{'rain-button': true , 'active':rainAudioClass}" @click="rainFunc">
+					<span :class="{'rain_text': true, 'show':rainNotiShow}" >Ok, để mình gọi mưa :))</span>
 					<img :src="rain" alt="rain" />
 				</div>
 				
@@ -51,15 +52,15 @@
 				<div :class="{'speaker-button':true, 'active':volumeClass}">
 					<img :src="volume" alt="volume"  @click="volumeFunc">
 					
-						<v-touch @tap="tap_volumeFunc" @panmove="panmove">
-					<div class="speaker-volume" id="speaker-volume">
+					<v-touch @tap="tap_volumeFunc" @panmove="panmove">
+						<div class="speaker-volume" id="speaker-volume">
 							<div class="speaker__progress" id="speakerProgress"></div>
 							<div class="speaker__progress-ball" id="ballVolume">
 								<span class="speaker__progress-ball-content">
 								</span>
 							</div>
-					</div> 
-						</v-touch>
+						</div> 
+					</v-touch>
 				</div>
 			</div>
 		</div>
@@ -78,7 +79,6 @@
 	import volume from '../assets/images/speaker.png';
 	import rain from '../assets/images/rain.png';
 	import rainAudio from '../assets/audio/rainAudio.mp3';
-	// import  { component as vTouch } from 'vue2-touch'
 
 	export default {
 		name: "PlayView",
@@ -95,13 +95,13 @@
 
 		components : {
 			Progress,
-			// vTouch
 		},
 
 		data(){
 			return {
 				pause_play_img : playBtn,
 				status : "pause",
+				rotateAvt: false,
 				pauseBtn,
 				playBtn,
 				prevBtn,
@@ -113,20 +113,15 @@
 				volumeClass : false,
 				volumeOffsetTop: 0,
 				ballVolumeOffsetTop: 0,
+				rainNotiShow: false,
 			}
 		},
 
 		methods : {
-			pause_or_play_click(e){ // toggle status
-				console.log(e.type);
+			pause_or_play_click(){ // toggle status
+				// console.log(e.type);
 				if (!this.$props.errPlayView) {
-					// if (window.innerWidth > 992) {
-						this.status = this.status === "pause" ? "play" : "pause";
-					// }
-					// console.log(">992")
-					// else {
-						// this.status = this.status === "pause" ? "play" : "pause";	
-					// }
+					this.status = this.status === "pause" ? "play" : "pause";
 				}
 			},
 
@@ -143,6 +138,12 @@
 			},
 
 			rainFunc(){
+				// if (!this.rainNotiShow) {
+				// 	this.rainNotiShow = true;
+				// } else if(this.rainNotiShow) {
+				// 	this.rainNotiShow = null;
+				// }
+
 				this.rainAudioClass = !this.rainAudioClass;
 				if (this.rainAudioClass) {
 					this.$refs.rainRef.play();
@@ -183,6 +184,10 @@
 				} else {
 					this.status = "pause";
 				}
+			},
+
+			status : function(newVal, oldVal) {
+				this.rotateAvt = newVal === "play" ? true : false;
 			}
 		},
 
@@ -199,7 +204,17 @@
 		},
 
 		mounted(){
-			this.volumeOffsetTop = document.getElementById('play-view__control').offsetTop - document.getElementById('speaker-volume').offsetTop;
-		}
+			this.volumeOffsetTop = document.getElementById('play-view__control').offsetTop - document.getElementById('speaker-volume').offsetTop - document.getElementById('ballVolume').offsetTop/2;
+			let musicRain = document.getElementById('audioId');
+			musicRain.addEventListener('waitting', function(){
+				if (!this.rainNotiShow) {
+					this.rainNotiShow = true;
+				}
+			});
+
+			musicRain.addEventListener('play', function(){
+				this.rainNotiShow = false;
+			});
+		},
 	}
 </script>

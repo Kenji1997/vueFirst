@@ -1,6 +1,6 @@
 <template>
 	<div class="Dashboard-01">
-		<Header :device="device" :trackInforProps="search_trackInfor" :trackListStatus="trackListStatus" />
+		<Header :device="device" :trackInforProps="search_trackInfor" :trackIndex="trackIndex"/>
 	    <backgroundCanvas />
 	    <PlayView :trackInfor="trackInfor" :statusPlayView="playview_status" :updateStatusByDashboard="statusUpdatePlayview" :currentTimeTrack="currentTimeTrack" :seekTime="seekTime" :errPlayView="err" :soundvolume="setVolumeFunc"/>
 	</div>
@@ -15,6 +15,11 @@
 
 	export default {
 	  name: 'dashboard',
+	  components: {
+	    Header,
+	    backgroundCanvas,
+	    PlayView,
+	  },
 	  
 	  data(){
 	  	return  {
@@ -28,15 +33,8 @@
 	  		trackList : defaultDb,
 	  		currentTimeTrack : 0,
 	  		err : false,
-	  		trackListStatus: false,
 	  		soundVolume: 0.5,
 	  	}
-	  },
-
-	  components: {
-	    Header,
-	    backgroundCanvas,
-	    PlayView,
 	  },
 
 	  watch : {
@@ -93,40 +91,52 @@
 	  	},
 
 	  	SoundListenFunction()
-	  	{
-	  		this.sound.on('play', function(){
-	  		console.log('helolo');
-	  			this.statusUpdatePlayview = "play";
-
-	  		}.bind(this));
-
-	  		this.sound.on("pause", function(){
-	  			this.statusUpdatePlayview = "pause";
-	  		}.bind(this));
-
-	  		this.sound.on("finish", function(){
-	  			this.statusUpdatePlayview = "pause";
-	  			alert('hello');
-	  			this.trackIndex = (this.trackIndex + 1)%this.trackList.length;
-	  			this.trackId = this.trackList[this.trackIndex].id;
-	  			this.trackInfor = this.trackList[this.trackIndex];
-	  		}.bind(this))
+	  	{	
+	  		this.sound.on(
+	  			'state-change',
+		 		function(){
+		 			 if (this.sound.getState === "plaing") {
+		 				this.statusUpdatePlayview = "play";
+		 			} else if( this.sound.getState === "loading"){
+		 				alsert('loading');
+		 			}
+  				}.bind(this)
+			).on(
+	  			'play',
+	  			function(){
+	  				this.statusUpdatePlayview = "play";
+	  			}.bind(this)
+  			).on(
+  				"pause",
+  				function(){
+	  				this.statusUpdatePlayview = "pause";
+	  			}.bind(this)
+	  		).on(
+	  			"finish",
+	  			function(){
+		  			this.statusUpdatePlayview = "pause";
+		  			this.trackIndex = (this.trackIndex + 1)%this.trackList.length;
+		  			this.trackId = this.trackList[this.trackIndex].id;
+		  			this.trackInfor = this.trackList[this.trackIndex];
+		  		}.bind(this)
+		  	)
 	  	},
 
 	  	async playTrack()
 	  	{
 	  		if (this.sound) {
-	  			console.log('ok');
 	  			this.sound.pause();
 	  		}
 
-  			this.sound = await SC.stream('tracks/'+this.trackId);
-  			this.sound.setVolume(this.soundVolume);
-	  		// 	this.err = false;
-	  		// } catch(err){
-	  		// 	console.log('err');
-	  		// 	this.err = true;
-	  		// }
+	  		try {
+  				this.sound = await SC.stream('tracks/'+this.trackId);
+  				this.sound.setVolume(this.soundVolume);
+	  			this.err = false;
+	  		} catch(err){
+	  			this.err = true;
+	  			alert('loi cmnr , kiem tra lai mang xem nao @@')
+	  		}
+
 	  		if (!this.err) {
 	  			this.SoundListenFunction();
 	  			this.sound.play();
@@ -138,20 +148,12 @@
 	  	{
 	  		this.sound.seek(seekTime);
 	  	},
-	  	showTrackList()
-	  	{
-	  		this.trackListStatus = true;
-	  	},
-	  	hideTrackList()
-	  	{
-	  		this.trackListStatus = false;
-	  	},
 	  	setVolumeFunc(volume)
 	  	{
 	  		volume*=0.01;
-	  		console.log(1-volume);
-	  		this.soundVolume = 1-volume;
-	  		// this.sound.setVolume(1-volume);
+	  		volume = 1-volume;
+	  		volume = volume.toFixed(2);
+	  		this.soundVolume = volume;
 	  	}
 	  },
 
@@ -165,14 +167,6 @@
 	  			this.currentTimeTrack = this.sound.currentTime();
 	  			console.log('sent currentTimeTrack')
 	  		}
-					// if (!document.hidden && this.props.musicAppState.searchReducer.track_currentTime) {
-					// 	this.currentTimeProgress= this.currentTime = this.props.musicAppState.searchReducer.track_currentTime;
-
-					// 	console.log(this.currentTime + "day la currentTime");
-					// 	// self.timePlayed = new Date().getTime() - self.currentTime;
-					// 	// this.progressX_current = (this.currentTime/this.duration)*this.width
-					// }
-
 		}.bind(this), false);
 	  },
 	}

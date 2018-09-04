@@ -17,8 +17,6 @@
 			return {
 				// status
 				progressStatus : "pause",
-				//
-
 				progressCanvas : null,
 				ctx : null,
 				width : null,
@@ -38,8 +36,6 @@
 					time : 0,
 					currentX : null
 				},
-				//
-
 				// time
 				time : {
 					durationTime : {
@@ -60,7 +56,6 @@
 
 		watch : {
 			trackid : function(newVal, oldVal){
-				// if (!this.errProgress) {
 				// set time duration
 				this.time.durationTime.text = this.millisecondsToMin(this.$props.duration);
 				// init
@@ -84,9 +79,8 @@
 			},
 
 			currentTimeTrack : function(newVal, oldVal){
-				// if(newVal) {}
-				console.log(newVal)
 				this.time.currentTime.time = newVal;
+				this.progress.time = newVal;
 				this.drawFunction();
 			}
 		},
@@ -118,19 +112,6 @@
 				this.progress.time = 0;
 				this.progress.currentX = 0;
 				this.RAF = true;
-
-				// swap tab support
-				// document.addEventListener("visibilitychange", function(){
-				// 	// if (!document.hidden && this.props.musicAppState.searchReducer.track_currentTime) {
-				// 	// 	this.currentTimeProgress= this.currentTime = this.props.musicAppState.searchReducer.track_currentTime;
-
-				// 	// 	console.log(this.currentTime + "day la currentTime");
-				// 	// 	// self.timePlayed = new Date().getTime() - self.currentTime;
-				// 	// 	// this.progressX_current = (this.currentTime/this.duration)*this.width
-				// 	// }
-
-				// }.bind(this), false);
-				// this.progress.time = 
 			},
 
 			update(){
@@ -151,11 +132,9 @@
 
 				if (this.time.currentTime.time >= this.$props.duration - 1000) { // finish track
 					this.time.currentTime.time = this.$props.duration;
-					// this.curTimeText = this.millisecondsToMin(this.time.currentTime.time);
 					this.drawFunction();
+					this.RAF = false;
 					console.log('het bai hat');
-					// this.pauseProgress();
-					// this.props.progressStatus("finish");
 				}
 
 				if (this.RAF) {
@@ -192,16 +171,27 @@
 				this.RAF = true;
 				this.update();
 			},
+			
+			offsetLeft(e){
+              let ele = document.querySelector(e);
+              let positionName = ele.style.position;
+              ele.style.position = "fixed";
+              let offsetLeftVal = ele.offsetLeft;
+              ele.style.position = positionName;
+              return offsetLeftVal;
+            },
 
-			clickFunc(e){
-				if (this.RAF) {
-					let x = e.pageX;
-					let seekTime = (x/this.width)*this.$props.duration;
-					this.time.currentTime.time = seekTime;
-					this.progress.time = seekTime;
-					this.$props.seekTime(seekTime);
-				}
-			}
+            clickFunc(e){
+                if (this.RAF) {
+                    let offsetLeft = this.offsetLeft("#progress-bar-01");
+                    let x = e.pageX;
+                    let seekTime = ((x-offsetLeft)*this.$props.duration)/this.width;
+                    console.log(x-offsetLeft, this.$props.duration);
+                    this.time.currentTime.time = seekTime;
+                    this.progress.time = seekTime;
+                    this.$props.seekTime(seekTime);
+                }
+            }
 		},
 
 		mounted(){

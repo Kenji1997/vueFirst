@@ -30,7 +30,6 @@
 						this.ctx = this.myCanvas.getContext('2d');
 					this.ctx.globalCompositeOperation = "source-over";
 					this.myCanvas.width = windowWidth;
-					//
 
 					// define color for waves
 					this.grd1=this.ctx.createLinearGradient(0,0,this.myCanvas.width/2,0);
@@ -59,7 +58,6 @@
 						this.timeExecute = this.timeNow;
 					};
 					window.requestAnimationFrame(this.drawFunc);
-					// console.log('hello');
 				},
 
 				start : function(){
@@ -68,9 +66,9 @@
 					
 					let t = new Promise((resolve, reject)=>{
 						this.initFunc();
-						this.wave1 = new Wave("1", 130, 35, 0.2, this.myCanvas, this.ctx, this.grd1);
-						this.b = new Wave("2", 150, 40, 0.2, this.myCanvas, this.ctx, this.grd2);
-						this.c = new Wave("3", 140, 35, 0.3, this.myCanvas, this.ctx, this.grd3);
+						this.wave1 = new Wave("1", 170, 35, 0.2, this.myCanvas, this.ctx, this.grd1);
+						this.b = new Wave("2", 190, 40, 0.2, this.myCanvas, this.ctx, this.grd2);
+						this.c = new Wave("3", 180, 35, 0.3, this.myCanvas, this.ctx, this.grd3);
 						resolve();
 					});
 

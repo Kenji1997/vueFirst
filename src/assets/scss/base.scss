@@ -1,10 +1,7 @@
-@import url('https://fonts.googleapis.com/css?family=Tangerine');
-@import url('https://fonts.googleapis.com/css?family=Roboto');
-
 * {
 	margin: 0;
 	padding: 0;
-	font-family: 'Roboto sans-serif';
+	font-family: "Roboto" !important;
 }
 
 a,
@@ -15,4 +12,13 @@ a:active {
 
 * {
 	user-select: none;
+}
+
+input {
+    -webkit-appearance: none !important;
+    border-radius: 0;
+    
+    &:focus {
+    	outline: none;
+    }
 }

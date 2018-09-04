@@ -10,10 +10,10 @@
 	text-align: center;
 	margin-top: 90px;
 	margin-bottom: 30px;
-	padding: 0 15%;
+	padding: 0 20%;
 
 	.play-view__image {
-		width: 70%;
+		width: 60%;
 		// max-width: 375px;
 		// max-height: 375px;
 		display: inline-block;
@@ -109,6 +109,33 @@
 
 		&.active {
 			border-color: #fff;
+		}
+	}
+
+	.rain_text {
+		@include absolute(null, null, calc(100% + 25px), 0);
+		background-color: #fff;
+		display: inline-block;
+		padding: 5px; 
+		width: 175px;
+		border: 1px solid #333;
+		border-radius: 5px;
+		opacity: 0;
+		visibility: hidden;
+
+		&:after {
+			content: '';
+			display: block;
+			@include absolute(calc(100% - 1px), null, null, 10px);
+			border-bottom: 10px solid transparent;
+			border-right: 7px solid transparent;
+			border-left: 7px solid transparent;
+			border-top: 13px solid #fff;
+		}
+
+		&.show {
+			opacity: 1;
+			visibility: visible;
 		}
 	}
 

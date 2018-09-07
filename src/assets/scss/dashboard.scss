@@ -27,18 +27,14 @@
 
 			.listTrack--wrapper {
 				position: absolute;
-				visibility: hidden;
-				opacity: 0;
+				opacity: 1;
+				visibility: visible;
 				height: 100%;
 				max-height: calc(100% - 107px);
 				left: 15px;
 				top: 62px;
 				right: 15px;
-				
-				&.show {
-					opacity: 1;
-					visibility: visible;
-				}
+				transform: translateX(0);
 			}
 		}
 

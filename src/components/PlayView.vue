@@ -119,9 +119,8 @@
 
 		methods : {
 			pause_or_play_click(){ // toggle status
-				// console.log(e.type);
 				if (!this.$props.errPlayView) {
-					this.status = this.status === "pause" ? "play" : "pause";
+					this.status = (this.status === "pause" || this.status ==="finish") ? "play" : "pause";
 				}
 			},
 
@@ -139,7 +138,7 @@
 
 			rainFunc(){
 				// if (!this.rainNotiShow) {
-				// 	this.rainNotiShow = true;
+				// 	this.rainNotiShow = true;f
 				// } else if(this.rainNotiShow) {
 				// 	this.rainNotiShow = null;
 				// }
@@ -179,11 +178,7 @@
 
 		watch : {
 			updateStatusByDashboard : function(newVal, oldVal){
-				if (newVal== "play") {
-					this.status = newVal; // update status by statusUpdatePlayview of dashboard
-				} else {
-					this.status = "pause";
-				}
+				this.status = newVal; // update status by statusUpdatePlayview of dashboard
 			},
 
 			status : function(newVal, oldVal) {
@@ -193,7 +188,7 @@
 
 		updated(){
 			// toggle image button by status
-			if ( this.status === "pause") {
+			if ( this.status === "pause" || this.status === "finish") {
 				this.pause_play_img = this.playBtn
 			} else {
 				this.pause_play_img = this.pauseBtn;

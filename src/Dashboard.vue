@@ -114,8 +114,9 @@
 	  		).on(
 	  			"finish",
 	  			function(){
-		  			this.statusUpdatePlayview = "pause";
+		  			this.statusUpdatePlayview = "finish";
 		  			this.trackIndex = (this.trackIndex + 1)%this.trackList.length;
+		  			console.log(this.trackList.length, this.trackIndex);
 		  			this.trackId = this.trackList[this.trackIndex].id;
 		  			this.trackInfor = this.trackList[this.trackIndex];
 		  		}.bind(this)

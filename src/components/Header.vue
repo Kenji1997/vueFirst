@@ -114,6 +114,7 @@
 				fetch('https://api.soundcloud.com/tracks/?q='+trackname+'/related&limit=' + limit + '&format=json&client_id=ec8f5272bde9a225c71692a876603706')
 				.then(res=>res.json())
 				.then(rsTrack=>{
+					console.log(rsTrack);
 					this.trackList = rsTrack;
 					
 					// off loading & suggest 

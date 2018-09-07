@@ -73,8 +73,14 @@
 
 				if(this.progressStatus === "pause") { // pause or unpause
 					this.pauseProgress();
-				} else {
+				} else if (this.progressStatus === "play") {
 					this.unpauseProgress();
+				}
+
+				if (newVal === "play" && oldVal === "finish") {
+					console.log('hello');
+					this.init();
+					this.update();
 				}
 			},
 
@@ -115,26 +121,26 @@
 			},
 
 			update(){
-				let time_now = new Date().getTime();			
-				if (time_now - this.last_time >=200) {
-					this.ctx.clearRect(0, 0, this.width, this.height);
-					this.progress.time+= 200;
+				let time_now = new Date().getTime();
+				if (this.time.currentTime.time >= this.$props.duration - 1000) { // finish track
+					this.time.currentTime.time = this.$props.duration;
+					this.drawFunction();
+					this.RAF = false;
+					console.log('het bai hat');
+				}
 
-					if (time_now - this.last_time2 >=1000) {
-						this.time.currentTime.time += 1000;
+				if (time_now - this.last_time >=300) {
+					this.ctx.clearRect(0, 0, this.width, this.height);
+					this.progress.time+= 300;
+
+					if (time_now - this.last_time2 >=900) {
+						this.time.currentTime.time += 900;
 						this.time.currentTime.text = this.millisecondsToMin(this.time.currentTime.time);
 						this.last_time2 = time_now;
 					}
 
 					this.drawFunction();
 					this.last_time = time_now;
-				}
-
-				if (this.time.currentTime.time >= this.$props.duration - 1000) { // finish track
-					this.time.currentTime.time = this.$props.duration;
-					this.drawFunction();
-					this.RAF = false;
-					console.log('het bai hat');
 				}
 
 				if (this.RAF) {
